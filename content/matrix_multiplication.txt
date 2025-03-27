@@ -1,0 +1,6 @@
+
+
+    - linearly transforms the coordinate system
+    - the matrix tells us where the unit vectors land
+
+After multiplying with M = [[1, 1], [1, 2]], i-hat and j-hat land on [1, 1] and [1, 2] and all other points fall into place.

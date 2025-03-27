@@ -1,0 +1,6 @@
+
+
+    - a point in space
+    - instructions for moving from the origin to [x, y]
+
+For example, [1, 2] tells us to start at [0, 0], take 1 step to the right and 2 steps up.

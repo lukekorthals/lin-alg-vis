@@ -38,6 +38,15 @@ transform = False
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 running = True
 
+m = np.array([[1, 1], [2, 2]])
+smooth_m = get_matrices_for_smooth_transformation(m, steps=100)
+
+ihat = Vector(1, 0, RED)
+jhat = Vector(0, 1, GREEN)
+
+x = Vector(0.5, 1, ORANGE)
+y = Vector(1, 0.5, BLUE)
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -47,11 +56,16 @@ while running:
     screen.fill(BLACK)
     coordinate_system.draw(screen)
     # coordinate_system.draw(screen, which_axes="", grid_original=True)
-    for v in vectors:
-        v.draw_as_point(screen)
+    # for v in vectors:
+    #     v.draw_as_point(screen)
+
+    ihat.draw_as_arrow(screen)
+    jhat.draw_as_arrow(screen)
+    x.draw_as_arrow(screen)
+    y.draw_as_arrow(screen)
     
-    pc1.draw_span(screen)
-    pc2.draw_span(screen)
+    # pc1.draw_span(screen)
+    # pc2.draw_span(screen)
 
     # Start transform when clicking a button on the screen
     if not transform and pygame.mouse.get_pressed()[0]:
@@ -65,17 +79,48 @@ while running:
             coordinate_system.apply_transformation(sm)
             coordinate_system.draw(screen)
 
-            pc1.draw_span(screen)
-            pc2.draw_span(screen)
+            # pc1.draw_span(screen)
+            # pc2.draw_span(screen)
             
             # Draw the data
-            for v in vectors:
-                v.apply_transformation(sm)
-                v.draw_as_point(screen)
-                # v.draw_as_arrow(screen)
+            # for v in vectors:
+            #     v.apply_transformation(sm)
+            #     v.draw_as_point(screen)
+            #     v.draw_as_arrow(screen)
+
+            x.apply_transformation(sm)
+            x.draw_as_arrow(screen)
+
+            y.apply_transformation(sm)
+            y.draw_as_arrow(screen)
+
+            ihat.apply_transformation(sm)
+            jhat.apply_transformation(sm)
+            ihat.draw_as_arrow(screen)
+            jhat.draw_as_arrow(screen)
 
             pygame.display.update()
-            pygame.time.delay(100)
+            pygame.time.delay(50)
+        # m = ((0, 1), (1, 0))
+        # smooth_m = get_matrices_for_smooth_transformation(m, steps=100)
+        # print("Done")
+        # for sm in smooth_m:
+        #     screen.fill(BLACK)
+        #     # Draw the coordinate system
+        #     coordinate_system.apply_transformation(sm)
+        #     coordinate_system.draw(screen)
+
+        #     # pc1.draw_span(screen)
+        #     # pc2.draw_span(screen)
+            
+        #     # Draw the data
+        #     for v in vectors:
+        #         v.apply_transformation(sm, False)
+        #         v.draw_as_point(screen)
+        #         v.draw_as_arrow(screen)
+
+        #     pygame.display.update()
+        #     pygame.time.delay(50)
         transform = False
 
     # for sm in smooth_m:

@@ -7,6 +7,11 @@ def center_to_topleft(v: np.ndarray | list | tuple) -> np.ndarray:
     assert type(v) in [np.ndarray, list, tuple], "v must be a numpy array, list or tuple."
     return np.array(v) * UNIT * np.array((1, -1)) + np.array((WIDTH/2, HEIGHT/2))
 
+def topleft_to_center(v: np.ndarray | list | tuple) -> np.ndarray:
+    """Converts vector coordinates from top-left to center origin."""
+    assert type(v) in [np.ndarray, list, tuple], "v must be a numpy array, list or tuple."
+    return (np.array(v) - np.array((WIDTH/2, HEIGHT/2))) * np.array((1, -1)) / UNIT
+
 # Tests
 assert np.all(center_to_topleft(((0, 1), (1, 1), (0, 0))) == np.array(((400, 320), (480, 320), (400, 400)))), "Test for center_to_topleft failed"
 

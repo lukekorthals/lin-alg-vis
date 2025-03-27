@@ -1,0 +1,9 @@
+
+
+    - instructions to reverse a previous transformation
+    - multiplying A with its inverse A-1 yields the identity matrix
+    - A must be a square matrix (ncol = nrow) and det(A) != 0
+
+[1, 1]          [2, -1]          [1, 0]
+            x               = 
+[1, 2]          [-1, 1]          [0, 1]

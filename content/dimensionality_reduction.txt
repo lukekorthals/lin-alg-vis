@@ -1,0 +1,4 @@
+
+
+    - some transformations reduce the dimensionality of the data
+    - in 2D for example all points can be squished onto a single line

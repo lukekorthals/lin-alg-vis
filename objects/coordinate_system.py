@@ -44,9 +44,9 @@ class CoordinateSystem2D:
         self.x_axis_original = x_axis
         self.y_axis_original = y_axis
 
-    def apply_transformation(self, m: np.ndarray | tuple | list, original: bool = True):
+    def apply_transformation(self, m: np.ndarray | tuple | list, overwrite_original: tuple = None):
         """Applies a transformation matrix to the coordinate system."""
-        points, x_axis, y_axis = self._select_points(original)
+        points, x_axis, y_axis = self._select_points(True) if overwrite_original is None else overwrite_original
 
         self.points = apply_transformation(points.T.reshape(-1, 2), m).T.reshape(points.shape)
         self.x_axis = apply_transformation(x_axis, m)

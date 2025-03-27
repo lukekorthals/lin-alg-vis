@@ -4,7 +4,16 @@ import pygame
 import numpy as np
 
 from utils.transformations import center_to_topleft
+from settings.colors import *
+from pygame.font import Font
+from pygame import Surface
 
+
+def draw_text(surface: Surface, font: Font, text: str, pos: tuple, color: tuple = BLACK, background: tuple = WHITE, antialias: bool = True):
+    """Apply center_to_topleft() and draw pygame.font.Font.render()."""
+    pos = center_to_topleft(pos)
+    text = font.render(text, antialias, color, background)
+    surface.blit(text, pos)
 
 def draw_line(surface, color, start_pos, end_pos, width: int = 1):
     """Apply center_to_topleft() and draw pygame.draw.line."""
@@ -29,11 +38,6 @@ def draw_circle(surface,
     """Apply center_to_topleft() and draw pygame.draw.circle."""
     center = center_to_topleft(center)
     pygame.draw.circle(surface, color, center, radius, width, draw_top_right, draw_top_left, draw_bottom_left, draw_bottom_right)
-
-
-
-    
-
 
 def draw_arrow(surface,
                color,

@@ -1,0 +1,8 @@
+
+
+    - i-hat = [1, 0] defines the x-axis
+    - j-hat = [0, 1] defines the y-axis
+    - define the structure of the coordinate system
+
+Any other point can be described as a linear combination of these two unit vectors. For example: 
+[2, 3] = i-hat * 2 + j-hat * 3.
