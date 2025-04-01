@@ -1,0 +1,5 @@
+
+
+    - if det(A) = 0, A has no inverse
+    - this is true if A reduces the dimensionality of the data
+    - because after the transformation there are some points for which it is unclear where they were before the transformation

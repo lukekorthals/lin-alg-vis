@@ -46,7 +46,7 @@ running = True
 manager = pygame_gui.UIManager((WIDTH, HEIGHT))
 playground_manager = pygame_gui.UIManager((WIDTH, HEIGHT))
 dropdown = pygame_gui.elements.UIDropDownMenu(
-    options_list=["What is a Vector?", "Unit Vectors", "Matrix Multiplication", "Inverse of a matrix", "Dimensionality reduction", "Play around"],
+    options_list=["What is a Vector?", "Unit Vectors", "Matrix Multiplication", "Inverse of a matrix", "Dimensionality reduction", "Matrices with no inverse", "Playground"],
     starting_option="What is a Vector?",
     relative_rect=pygame.Rect(center_to_topleft((-4.5, 4.5)), (UNIT*2, UNIT*0.5)),
     manager=manager
@@ -125,7 +125,7 @@ def draw_text_from_file(file_path, start_pos = (-4.3, 4.3), wrap_width = 40):
 
 
 # What is a vector?
-def what_is_a_vector():
+def what_is_a_vector(visualize=False):
     # Coordinate system
     screen.fill(BLACK)
     coordinate_system.draw(screen, which_grid="")
@@ -170,7 +170,7 @@ def what_is_a_vector():
             pygame.time.wait(200)
 
 # Unit Vectors
-def unit_vectors():
+def unit_vectors(visualize=False):
     # Coordinate system
     screen.fill(BLACK)
     coordinate_system.draw(screen, which_grid="xy")
@@ -267,7 +267,7 @@ def unit_vectors():
         pygame.time.wait(2000)
 
 # matrix multiplication
-def matrix_multiplication():
+def matrix_multiplication(visualize=False):
     # Coordinate system
     screen.fill(BLACK)
     coordinate_system.generate()
@@ -345,7 +345,7 @@ def matrix_multiplication():
         pygame.time.wait(5000)
 
 # Inverse of a matrix
-def inverse_of_a_matrix():
+def inverse_of_a_matrix(visualize=False):
     # Coordinate system
     screen.fill(BLACK)
     coordinate_system.generate()
@@ -434,7 +434,7 @@ def inverse_of_a_matrix():
         pygame.time.wait(3000)
 
 # Dimensionality reduction
-def dimensionality_reduction():
+def dimensionality_reduction(visualize=False):
     # Coordinate system
     screen.fill(BLACK)
     coordinate_system.generate()
@@ -498,6 +498,159 @@ def dimensionality_reduction():
             pygame.time.wait(50)
         pygame.time.wait(3000)
 
+# No inverse
+def no_inverse(visualize=False):
+    # Coordinate system
+    screen.fill(BLACK)
+    coordinate_system.generate()
+    coordinate_system.draw(screen, which_grid="xy")
+
+    # Text box
+    draw_textbox_background(screen)
+    draw_text_from_file("content/matrices_with_no_inverse.txt")
+
+    # Draw i-hat
+    ihat.reset()
+    ihat.draw_as_arrow(screen)
+    ihat.draw_label(screen, font)
+
+    # Draw j-hat
+    jhat.reset()
+    jhat.draw_as_arrow(screen)
+    jhat.draw_label(screen, font)
+    
+    # Define matrix with no inverse
+    m = np.array(((1, 0), (0, 0))).T
+    smooth_m = get_matrices_for_smooth_transformation(m)
+
+    # Draw two points that land on the same point
+    x = Vector(-2, 1, ORANGE)
+    y = Vector(-2, -1, BLUE)
+    x.draw_as_point(screen)
+    y.draw_as_point(screen)
+    x.draw_as_arrow(screen)
+    y.draw_as_arrow(screen)
+    x.draw_label(screen, font)
+    y.draw_label(screen, font)
+
+
+    if visualize:
+        for sm in smooth_m:
+            # Coordinate system
+            screen.fill(BLACK)
+            coordinate_system.apply_transformation(sm)
+            coordinate_system.draw(screen, which_grid="xy")
+
+            # Transform i-hat and j-hat
+            ihat.apply_transformation(sm)
+            jhat.apply_transformation(sm)
+
+            # Draw vectors
+            ihat.draw_as_arrow(screen)
+            jhat.draw_as_arrow(screen)
+            ihat.draw_label(screen, font)
+            jhat.draw_label(screen, font)
+
+            # Transform x and y
+            x.apply_transformation(sm)
+            y.apply_transformation(sm)
+
+            # Draw vectors
+            x.draw_as_point(screen)
+            x.draw_as_arrow(screen)
+            y.draw_as_point(screen)
+            y.draw_as_arrow(screen)
+            y.draw_label(screen, font)
+            x.draw_label(screen, font)
+            
+
+            # UI and flip
+            manager.draw_ui(screen)
+            manager.update(time_delta)
+            pygame.display.flip()
+            pygame.time.wait(50)
+        pygame.time.wait(3000)
+
+# Playground
+def playground(points=[], visualize=False):
+    # Coordinate system
+    screen.fill(BLACK)
+    coordinate_system.generate()
+    coordinate_system.draw(screen, which_grid="xy")
+
+    # Text box
+    draw_textbox_background(screen)
+
+    [p.draw_as_point(screen) for p in points]
+    [p.draw_label(screen, font, nudge=(0.1, 0.25)) for p in points]
+
+    # Draw i-hat
+    ihat.reset()
+    ihat.draw_as_arrow(screen)
+    ihat.draw_label(screen, font)
+
+    # Draw j-hat
+    jhat.reset()
+    jhat.draw_as_arrow(screen)
+    jhat.draw_label(screen, font)
+
+    # add points by clicking
+    if pygame.mouse.get_pressed()[0]:
+        pos = pygame.mouse.get_pos()
+        # if pos is over the matrix inputs dont add point
+        if m_a_input.rect.collidepoint(pos) or m_b_input.rect.collidepoint(pos) or m_c_input.rect.collidepoint(pos) or m_d_input.rect.collidepoint(pos) or dropdown.rect.collidepoint(pos) or visualize_button.rect.collidepoint(pos):
+            pass
+        else:
+            pos = topleft_to_center((pos[0], pos[1]))
+            points.append(Vector(pos[0], pos[1], ORANGE))
+    
+    if visualize:
+        m = ((float(m_a_input.get_text()), float(m_b_input.get_text())), (float(m_c_input.get_text()), float(m_d_input.get_text())))
+        smooth_m = get_matrices_for_smooth_transformation(m)
+        for sm in smooth_m:
+            # Coordinate system
+            screen.fill(BLACK)
+            coordinate_system.apply_transformation(sm)
+            coordinate_system.draw(screen, which_grid="xy")
+            
+            # Draw i-hat
+            ihat.apply_transformation(sm)
+            ihat.draw_as_arrow(screen)
+            ihat.draw_label(screen, font)
+
+            # Draw j-hat
+            jhat.apply_transformation(sm)
+            jhat.draw_as_arrow(screen)
+            jhat.draw_label(screen, font)
+
+            # Text box
+            draw_textbox_background(screen)
+
+            [p.apply_transformation(sm) for p in points]
+            [p.draw_as_point(screen) for p in points]
+            # [p.draw_label(screen, font, nudge=(0.1, 0.25)) for p in points]
+
+            # UI and flip
+            manager.draw_ui(screen)
+            manager.update(time_delta)
+            playground_manager.draw_ui(screen)
+            playground_manager.update(time_delta)
+            pygame.display.flip()
+            pygame.time.wait(50)
+
+        pygame.time.wait(3000)
+        points = []
+        visualize = False
+    
+    manager.draw_ui(screen)
+    manager.update(time_delta)
+    playground_manager.draw_ui(screen)
+    playground_manager.update(time_delta)
+    pygame.display.flip()
+
+
+
+
 visualize = False
 points = []
 while running:
@@ -518,96 +671,27 @@ while running:
 
     # What is a vector?
     if dropdown.selected_option[0] == "What is a Vector?":
-        what_is_a_vector()
+        what_is_a_vector(visualize)
         
     elif dropdown.selected_option[0] == "Unit Vectors":
-        unit_vectors()
+        unit_vectors(visualize)
 
     elif dropdown.selected_option[0] == "Matrix Multiplication":
-        matrix_multiplication()
+        matrix_multiplication(visualize)
     
     elif dropdown.selected_option[0] == "Inverse of a matrix":
-        inverse_of_a_matrix()
+        inverse_of_a_matrix(visualize)
     
     elif dropdown.selected_option[0] == "Dimensionality reduction":
-        dimensionality_reduction()
-    
-    elif dropdown.selected_option[0] == "Play around":
+        dimensionality_reduction(visualize)
+
+    elif dropdown.selected_option[0] == "Matrices with no inverse":
+        no_inverse(visualize)
+
+    elif dropdown.selected_option[0] == "Playground":
+        playground(points, visualize)
+
         
-
-        # Coordinate system
-        screen.fill(BLACK)
-        coordinate_system.generate()
-        coordinate_system.draw(screen, which_grid="xy")
-
-        # Text box
-        draw_textbox_background(screen)
-
-        [p.draw_as_point(screen) for p in points]
-        [p.draw_label(screen, font, nudge=(0.1, 0.25)) for p in points]
-
-        # Draw i-hat
-        ihat.reset()
-        ihat.draw_as_arrow(screen)
-        ihat.draw_label(screen, font)
-
-        # Draw j-hat
-        jhat.reset()
-        jhat.draw_as_arrow(screen)
-        jhat.draw_label(screen, font)
-
-        # add points by clicking
-        if pygame.mouse.get_pressed()[0]:
-            pos = pygame.mouse.get_pos()
-            # if pos is over the matrix inputs dont add point
-            if m_a_input.rect.collidepoint(pos) or m_b_input.rect.collidepoint(pos) or m_c_input.rect.collidepoint(pos) or m_d_input.rect.collidepoint(pos) or dropdown.rect.collidepoint(pos) or visualize_button.rect.collidepoint(pos):
-                continue
-            pos = topleft_to_center((pos[0], pos[1]))
-            points.append(Vector(pos[0], pos[1], ORANGE))
-        
-        if visualize:
-            m = ((float(m_a_input.get_text()), float(m_b_input.get_text())), (float(m_c_input.get_text()), float(m_d_input.get_text())))
-            smooth_m = get_matrices_for_smooth_transformation(m)
-            for sm in smooth_m:
-                # Coordinate system
-                screen.fill(BLACK)
-                coordinate_system.apply_transformation(sm)
-                coordinate_system.draw(screen, which_grid="xy")
-                
-                # Draw i-hat
-                ihat.apply_transformation(sm)
-                ihat.draw_as_arrow(screen)
-                ihat.draw_label(screen, font)
-
-                # Draw j-hat
-                jhat.apply_transformation(sm)
-                jhat.draw_as_arrow(screen)
-                jhat.draw_label(screen, font)
-
-                # Text box
-                draw_textbox_background(screen)
-
-                [p.apply_transformation(sm) for p in points]
-                [p.draw_as_point(screen) for p in points]
-                # [p.draw_label(screen, font, nudge=(0.1, 0.25)) for p in points]
-
-                # UI and flip
-                manager.draw_ui(screen)
-                manager.update(time_delta)
-                playground_manager.draw_ui(screen)
-                playground_manager.update(time_delta)
-                pygame.display.flip()
-                pygame.time.wait(50)
-
-            pygame.time.wait(3000)
-            points = []
-            visualize = False
-        
-        manager.draw_ui(screen)
-        manager.update(time_delta)
-        playground_manager.draw_ui(screen)
-        playground_manager.update(time_delta)
-        pygame.display.flip()
         
     manager.draw_ui(screen)
     manager.update(time_delta)
