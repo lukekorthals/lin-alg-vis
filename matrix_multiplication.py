@@ -525,7 +525,7 @@ def no_inverse(visualize=False):
 
     # Draw two points that land on the same point
     x = Vector(-2, 1, ORANGE)
-    y = Vector(-2, -1, BLUE)
+    y = Vector(-2, -1, PURPLE)
     x.draw_as_point(screen)
     y.draw_as_point(screen)
     x.draw_as_arrow(screen)
@@ -555,6 +555,10 @@ def no_inverse(visualize=False):
             x.apply_transformation(sm)
             y.apply_transformation(sm)
 
+            # Draw original positions
+            x.draw_as_point(screen, original=True)
+            y.draw_as_point(screen, original=True)
+
             # Draw vectors
             x.draw_as_point(screen)
             x.draw_as_arrow(screen)
@@ -562,14 +566,16 @@ def no_inverse(visualize=False):
             y.draw_as_arrow(screen)
             y.draw_label(screen, font)
             x.draw_label(screen, font)
-            
+
+            # Textbox
+            draw_text(screen, font, f"(-2, 1) and (2, 1) both land on (-2, 0) after transforming them with A = ((1, 0), (0, 0)).\nTheir dimensionality was reduced from 2D to 1D. \nNow it is impossible to know which of these points should go where\nafter reversing the transformation.\nTherefore the transformation is not invertible (i.e., A has no inverse).", (-4.3, 4))
 
             # UI and flip
             manager.draw_ui(screen)
             manager.update(time_delta)
             pygame.display.flip()
             pygame.time.wait(50)
-        pygame.time.wait(3000)
+        pygame.time.wait(10000)
 
 # Playground
 def playground(points=[], visualize=False):
